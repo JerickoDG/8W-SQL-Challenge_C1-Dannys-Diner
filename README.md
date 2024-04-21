@@ -1,5 +1,7 @@
 # 8W-SQL-Challenge_C1-Dannys-Diner
 
+https://8weeksqlchallenge.com/case-study-1/
+
 ## Case Study Questions
 
 Each of the following case study questions can be answered using a single SQL statement:
