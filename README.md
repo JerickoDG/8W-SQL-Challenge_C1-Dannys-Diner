@@ -143,4 +143,27 @@ Each of the following case study questions can be answered using a single SQL st
 
 
 15. If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
-16. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
+
+    SQL Statement:
+    ```
+    SELECT
+    	transact_points.customer_id,
+    	SUM(transact_points.points) AS total_points
+    FROM (
+    	SELECT
+    		*,
+    		CASE
+    			WHEN menu.product_name = 'sushi' THEN menu.price * 2
+    			ELSE menu.price
+    		END AS points
+    	FROM sales
+    	INNER JOIN menu on menu.product_id = sales.product_id
+    ) AS transact_points
+    GROUP BY transact_points.customer_id
+    ORDER BY transact_points.customer_id ASC
+    ```
+    Output:
+
+    ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/d9bc63a5-c3fa-4628-a5b0-1d3ace0ac52e)
+    
+17. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
