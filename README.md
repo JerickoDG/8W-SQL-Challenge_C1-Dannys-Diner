@@ -116,5 +116,31 @@ Each of the following case study questions can be answered using a single SQL st
     _It is likely that customer A purchased two products on the same date._
     
 13. What is the total items and amount spent for each member before they became a member?
-14. If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
-15. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
+
+    SQL Statement:
+    ```
+    SELECT
+    	last_purchases_before_join.customer_id,
+    	COUNT(menu.product_id) AS total_items_before_joining,
+    	SUM(menu.price) AS total_amount
+    FROM menu
+    INNER JOIN (
+    SELECT
+    	sales.customer_id,
+    	sales.order_date,
+    	sales.product_id,
+    	members.join_date
+    FROM sales
+    INNER JOIN members ON sales.customer_id = members.customer_id
+    WHERE sales.order_date < members.join_date
+    ) AS last_purchases_before_join ON last_purchases_before_join.product_id = menu.product_id
+    GROUP BY last_purchases_before_join.customer_id
+    ORDER BY customer_id ASC
+    ```
+    Output:
+
+    ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/b9894f41-4543-4312-905d-2dd359f88835)
+
+
+15. If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
+16. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
