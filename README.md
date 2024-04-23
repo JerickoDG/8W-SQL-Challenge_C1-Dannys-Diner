@@ -167,3 +167,42 @@ Each of the following case study questions can be answered using a single SQL st
     ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/d9bc63a5-c3fa-4628-a5b0-1d3ace0ac52e)
     
 17. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
+
+    SQL Statement:
+    ```
+    SELECT
+    	transact_points.customer_id,
+    	SUM(transact_points.points) AS total_points
+    FROM (
+    	SELECT
+    		members_sales.customer_id,
+    		members_sales.product_id,
+    		members_sales.order_date,
+    		menu.product_name,
+    		menu.price,
+    		members_sales.join_date,
+    		CASE
+    			WHEN (members_sales.order_date BETWEEN members_sales.join_date 
+    				  AND (members_sales.join_date + 7)) AND (EXTRACT(MONTH FROM members_sales.order_date) = 1) 
+    					THEN menu.price*2
+    			ELSE menu.price
+    		END AS points
+    	FROM menu
+    	INNER JOIN (
+    		SELECT
+    			sales.customer_id,
+    			sales.product_id,
+    			sales.order_date,
+    			members.join_date
+    		FROM sales
+    		INNER JOIN members ON members.customer_id = sales.customer_id
+    	) AS members_sales ON members_sales.product_id = menu.product_id
+    ) AS transact_points
+    WHERE EXTRACT(MONTH FROM transact_points.order_date) = 1
+    GROUP BY transact_points.customer_id
+    ORDER BY transact_points.customer_id
+    ```
+    Output:
+
+    ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/b7b4e7d1-e133-4cbb-8fd0-48278da0be06)
+
