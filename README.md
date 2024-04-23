@@ -1,5 +1,7 @@
 # 8W-SQL-Challenge_C1-Dannys-Diner
 
+SQL DBMS used: PostgreSQL
+
 https://8weeksqlchallenge.com/case-study-1/
 
 ## Case Study Questions
