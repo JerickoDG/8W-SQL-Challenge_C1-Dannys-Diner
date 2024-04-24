@@ -43,7 +43,31 @@ Each of the following case study questions can be answered using a single SQL st
 
    
 5. What was the first item from the menu purchased by each customer?
-6. What is the most purchased item on the menu and how many times was it purchased by all customers?
+
+    SQL Statement:
+    ```
+    SELECT 
+    	sales.customer_id,
+    	first_purchase_tbl.first_purchase AS first_purchase_date,
+    	menu.product_name
+    FROM (
+    	SELECT 
+    		sales.customer_id,
+    		MIN(sales.order_date) AS first_purchase
+    	FROM sales
+    	GROUP BY sales.customer_id
+    ) AS first_purchase_tbl
+    INNER JOIN sales ON (sales.customer_id = first_purchase_tbl.customer_id) AND (sales.order_date = first_purchase_tbl.first_purchase)
+    INNER JOIN menu ON menu.product_id = sales.product_id
+    ORDER BY sales.customer_id, first_purchase_tbl.first_purchase
+    ```
+    Output:
+
+    ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/3e4f7564-14e9-4f51-856f-e16c544b61ce)
+
+    _Customer A and C had two transactions (i.e., bought products) on the same first day they had made purchase._
+
+7. What is the most purchased item on the menu and how many times was it purchased by all customers?
 
     SQL Statement:
     ```
