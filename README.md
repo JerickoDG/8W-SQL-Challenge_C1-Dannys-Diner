@@ -45,24 +45,26 @@ Each of the following case study questions can be answered using a single SQL st
 
     SQL Statement:
     ```
-    SELECT 
-    	sales.customer_id,
-    	first_purchase_tbl.first_purchase AS first_purchase_date,
-    	menu.product_name
-    FROM (
-    	SELECT 
-    		sales.customer_id,
-    		MIN(sales.order_date) AS first_purchase
-    	FROM sales
-    	GROUP BY sales.customer_id
-    ) AS first_purchase_tbl
-    INNER JOIN sales ON (sales.customer_id = first_purchase_tbl.customer_id) AND (sales.order_date = first_purchase_tbl.first_purchase)
-    INNER JOIN menu ON menu.product_id = sales.product_id
-    ORDER BY sales.customer_id, first_purchase_tbl.first_purchase
+    SELECT
+    	sodr.customer_id,
+    	sodr.product_name,
+    	sodr.order_date
+    FROM(
+    	SELECT
+    		s.customer_id,
+    		s.order_date,
+    		m.product_name,
+    		DENSE_RANK() OVER(PARTITION BY s.customer_id ORDER BY s.order_date) AS rank
+    	FROM sales s
+    	INNER JOIN menu m ON s.product_id = m.product_id
+    ) AS sodr
+    WHERE rank = 1
+    GROUP BY sodr.customer_id, sodr.product_name, sodr.order_date
     ```
     Output:
 
-    ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/3e4f7564-14e9-4f51-856f-e16c544b61ce)
+    ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/1671512f-17a8-44e7-93da-90c626df9b47)
+
 
     _Customer A and C had two transactions (i.e., bought products) on the same first day they had made purchase._
 
