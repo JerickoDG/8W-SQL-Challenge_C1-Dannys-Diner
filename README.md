@@ -29,17 +29,16 @@ Each of the following case study questions can be answered using a single SQL st
 
     SQL Statement:
     ```
-    SELECT 
-    	customer_id, 
-    	COUNT(sales.order_date) UNIQUE
-    FROM sales
-    INNER JOIN menu on menu.product_id = sales.product_id
-    GROUP BY sales.customer_id
-    ORDER BY sales.customer_id ASC
+    SELECT
+    	s.customer_id,
+    	COUNT(DISTINCT(s.order_date))
+    FROM sales s
+    GROUP BY s.customer_id
     ```
     Output:
 
-    ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/5dd187d0-3bf5-4305-8ff5-85c56b9e5b06)
+    ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/ced6b871-1a31-4665-894d-185ef8e9dffd)
+
 
    
 5. What was the first item from the menu purchased by each customer?
