@@ -338,5 +338,5 @@ Each of the following case study questions can be answered using a single SQL st
 
     ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/9521c291-a788-4d2f-8c0d-e3c5e710728e)
 
-    _Customer A had higher points than customer B. It seems that the former bought more products during his or her first week of being a member._
+    _Customer A had higher points than customer B. It seems that the former bought more products (possibly more sushi) during his or her first week of being a member._
     
