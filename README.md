@@ -28,7 +28,7 @@ Each of the following case study questions can be answered using a single SQL st
 
 
    
-3. How many days has each customer visited the restaurant?
+2. How many days has each customer visited the restaurant?
 
     SQL Statement:
     ```
@@ -45,7 +45,7 @@ Each of the following case study questions can be answered using a single SQL st
    _Customer B visited the shop the most!_
 
    
-5. What was the first item from the menu purchased by each customer?
+3. What was the first item from the menu purchased by each customer?
 
     SQL Statement:
     ```
@@ -72,7 +72,7 @@ Each of the following case study questions can be answered using a single SQL st
 
     _Customer A had two transactions (i.e., bought products) on the same first day they had made purchase which are curry and sushi!_
 
-7. What is the most purchased item on the menu and how many times was it purchased by all customers?
+4. What is the most purchased item on the menu and how many times was it purchased by all customers?
 
     SQL Statement:
     ```
@@ -92,7 +92,7 @@ Each of the following case study questions can be answered using a single SQL st
 
     _Ramen is the most popular product!_
 
-8. Which item was the most popular for each customer?
+5. Which item was the most popular for each customer?
 
     SQL Statement:
     ```
@@ -125,7 +125,7 @@ Each of the following case study questions can be answered using a single SQL st
    _It seems that customer B is fond of all the products!_
 
    
-10. Which item was purchased first by the customer after they became a member?
+6. Which item was purchased first by the customer after they became a member?
 
     SQL Statement:
     ```
@@ -158,7 +158,7 @@ Each of the following case study questions can be answered using a single SQL st
     ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/baf66603-7e02-42f9-9199-3511fea6f842)
 
     
-11. Which item was purchased just before the customer became a member?
+7. Which item was purchased just before the customer became a member?
     
     _Note: Purchases on the day customers became members are excluded from the count._
     
@@ -196,7 +196,7 @@ Each of the following case study questions can be answered using a single SQL st
    _Customer A purchase both sushi and curry on the last purchase before joining_
 
     
-13. What is the total items and amount spent for each member before they became a member?
+8. What is the total items and amount spent for each member before they became a member?
 
     _Note: With the assumption that on the date where a customer became a member, all of his/her order that day were before the time he/she became a member. Thus, instead of “s.order_date ≥ m.join_date”, it will be only “s.order_date > m.join_date”._
 
@@ -248,7 +248,7 @@ Each of the following case study questions can be answered using a single SQL st
     _Customer B purchase more products making him or her to spend more._
 
 
-15. If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
+9. If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
 
     SQL Statement:
     ```
@@ -281,7 +281,7 @@ Each of the following case study questions can be answered using a single SQL st
     _Customer B had the highest points while customer C had the lowest._
 
     
-17. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
+10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
     Note: Purchases on the day customers became members are excluded assuming that multiplier bonus starts the day or date after a customer becomes a member.
     
     SQL Statement:
