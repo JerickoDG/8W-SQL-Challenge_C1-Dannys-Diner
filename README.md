@@ -66,7 +66,7 @@ Each of the following case study questions can be answered using a single SQL st
     ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/1671512f-17a8-44e7-93da-90c626df9b47)
 
 
-    _Customer A and C had two transactions (i.e., bought products) on the same first day they had made purchase._
+    _Customer A had two transactions (i.e., bought products) on the same first day they had made purchase which are curry and sushi!_
 
 7. What is the most purchased item on the menu and how many times was it purchased by all customers?
 
@@ -86,6 +86,7 @@ Each of the following case study questions can be answered using a single SQL st
 
     ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/a372dcca-9ce8-4256-83de-13de2c1babdb)
 
+    _Ramen is the most popular product!_
 
 8. Which item was the most popular for each customer?
 
@@ -117,32 +118,41 @@ Each of the following case study questions can be answered using a single SQL st
 
     ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/6a7b0562-da34-45a8-a497-a6684dd435a5)
 
+   _It seems that customer B is fond of all the products!_
+
    
 10. Which item was purchased first by the customer after they became a member?
 
     SQL Statement:
     ```
-    SELECT
-        sales.customer_id,
-        menu.product_name,
-        first_purchase.first_purchase_date_after_join
-    FROM sales
-    INNER JOIN (
-        SELECT
-            sales.customer_id,
-            MIN(order_date) AS first_purchase_date_after_join
-        FROM sales
-        INNER JOIN members ON members.customer_id = sales.customer_id
-        WHERE order_date > members.join_date
-        GROUP BY sales.customer_id
-    ) AS first_purchase ON first_purchase.customer_id = sales.customer_id
-    INNER JOIN menu ON menu.product_id = sales.product_id
-    WHERE sales.order_date = first_purchase.first_purchase_date_after_join
-    ORDER BY sales.customer_id
+	--CTE to get the rank of each purchase based on order_date
+	--The order is ASC (default) to get the date of first purchase before the customer became a member
+	WITH cte_order_date_ranked AS(
+		SELECT
+			s.customer_id
+			,s.order_date
+			,s.product_id
+			,DENSE_RANK() OVER(PARTITION BY s.customer_id ORDER BY s.order_date) AS order_date_rank
+		FROM sales s
+		INNER JOIN members m ON s.customer_id = m.customer_id
+		WHERE s.order_date > m.join_date
+	)
+	
+	--Access CTE and get the purchases with rank = 1
+	--INNER JOIN with "menu" table to get the product_name
+	SELECT
+		cte_odr.customer_id
+		,men.product_name
+		,cte_odr.order_date AS first_order_after_join
+	FROM cte_order_date_ranked AS cte_odr
+	INNER JOIN menu men ON cte_odr.product_id = men.product_id
+	WHERE cte_odr.order_date_rank = 1
+	ORDER BY cte_odr.customer_id
     ```
     Output:
 
-    ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/89fcb1ca-cfa4-4f0b-8a89-94870e61ec7d)
+    ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/baf66603-7e02-42f9-9199-3511fea6f842)
+
     
 11. Which item was purchased just before the customer became a member?
     
@@ -150,33 +160,37 @@ Each of the following case study questions can be answered using a single SQL st
     
     SQL Statement:
     ```
-    --CTE to get the rank of each purchase based on order_date
-    --The order is ASC (default) to get the date of first purchase before the customer became a member
-    WITH cte_order_date_ranked AS(
-    	SELECT
-    		s.customer_id
-    		,s.order_date
-    		,s.product_id
-    		,DENSE_RANK() OVER(PARTITION BY s.customer_id ORDER BY s.order_date) AS order_date_rank
-    	FROM sales s
-    	INNER JOIN members m ON s.customer_id = m.customer_id
-    	WHERE s.order_date > m.join_date
-    )
-    
-    --Access CTE and get the purchases with rank = 1
-    --INNER JOIN with "menu" table to get the product_name
-    SELECT
-    	cte_odr.customer_id
-    	,men.product_name
-    	,cte_odr.order_date AS first_purchase_after_join
-    FROM cte_order_date_ranked AS cte_odr
-    INNER JOIN menu men ON cte_odr.product_id = men.product_id
-    WHERE cte_odr.order_date_rank = 1
-    ORDER BY cte_odr.customer_id
+	--CTE to get the rank of each purchase based on order_date
+	--The order is DESC to get the most recent purchase before the customer became a member
+	WITH cte_order_date_ranked AS(
+		SELECT
+			s.customer_id
+			,s.order_date
+			,s.product_id
+			,DENSE_RANK() OVER(PARTITION BY s.customer_id ORDER BY s.order_date DESC) AS order_date_rank
+		FROM sales s
+		INNER JOIN members m ON s.customer_id = m.customer_id
+		WHERE s.order_date < m.join_date
+	)
+	
+	--Access CTE and get the purchases with rank = 1
+	--INNER JOIN with "menu" table to get the product_name
+	SELECT
+		cte_odr.customer_id
+		,men.product_name
+		,cte_odr.order_date AS last_purchase_before_join
+	FROM cte_order_date_ranked AS cte_odr
+	INNER JOIN menu men ON cte_odr.product_id = men.product_id
+	WHERE cte_odr.order_date_rank = 1
+	ORDER BY cte_odr.customer_id
     ```
     Output:
 
-    ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/c4f540c5-4009-45f1-bba7-b2aa3c7de1b1)
+   ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/1a02c99a-0522-4f39-a3f0-a389011c02c8)
+
+
+   _Customer A purchase both sushi and curry on the last purchase before joining_
+
     
 13. What is the total items and amount spent for each member before they became a member?
 
@@ -226,7 +240,8 @@ Each of the following case study questions can be answered using a single SQL st
     Output:
 
     ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/b866e6bf-b95c-45d3-b8af-ca28f32ea080)
-
+    
+    _Customer B purchase more products making him or her to spend more._
 
 
 15. If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
@@ -258,6 +273,8 @@ Each of the following case study questions can be answered using a single SQL st
     Output:
 
     ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/434ab353-b2ec-4c96-9f49-68d1dd49ae68)
+
+    _Customer B had the highest points while customer C had the lowest._
 
     
 17. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
@@ -317,4 +334,5 @@ Each of the following case study questions can be answered using a single SQL st
 
     ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/9521c291-a788-4d2f-8c0d-e3c5e710728e)
 
-
+    _Customer A had higher points than customer B. It seems that the former bought more products during his or her first week of being a member._
+    
