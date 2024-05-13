@@ -88,7 +88,37 @@ Each of the following case study questions can be answered using a single SQL st
 
 
 8. Which item was the most popular for each customer?
-9. Which item was purchased first by the customer after they became a member?
+
+    SQL Statement:
+    ```
+    -- CTE to get the rank of each product_id based on the COUNT() per unique customer_id
+    WITH cte_ranked_purchase_cnt AS (
+    	SELECT
+    		s.customer_id
+    		,s.product_id
+    		,COUNT(s.product_id) AS purchase_cnt
+    		,DENSE_RANK() OVER(PARTITION BY s.customer_id ORDER BY COUNT(s.product_id) DESC) AS ranked
+    	FROM sales s
+    	GROUP BY s.customer_id, s.product_id
+    )
+    
+    -- Access the  CTE to filter all rows with ranked = 1
+    -- INNER JOIN with "menu" table to access product_name
+    SELECT
+    	s.customer_id,
+    	m.product_name,
+    	s.purchase_cnt
+    FROM cte_ranked_purchase_cnt s
+    INNER JOIN menu m ON s.product_id = m.product_id
+    WHERE ranked = 1
+    ORDER BY s.customer_id
+    ```
+    Output:
+
+    ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/6a7b0562-da34-45a8-a497-a6684dd435a5)
+
+   
+10. Which item was purchased first by the customer after they became a member?
 
     SQL Statement:
     ```
