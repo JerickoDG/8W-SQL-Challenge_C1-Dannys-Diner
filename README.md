@@ -14,7 +14,7 @@ Each of the following case study questions can be answered using a single SQL st
     ```
     SELECT 
       customer_id, 
-      SUM(price)
+      SUM(price) AS total_price
       FROM sales
     INNER JOIN menu on menu.product_id = sales.product_id
     GROUP BY sales.customer_id
@@ -22,7 +22,10 @@ Each of the following case study questions can be answered using a single SQL st
     ```
     Output:
     
-    ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/af9bd36d-a8c5-4c61-b1fe-bcee4da4f906)
+    ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/682cb7da-07c5-4c0a-954c-89e9cd6f4cb2)
+
+   _Customer A had spent the most amount out of all the customers!_
+
 
    
 3. How many days has each customer visited the restaurant?
@@ -31,14 +34,15 @@ Each of the following case study questions can be answered using a single SQL st
     ```
     SELECT
     	s.customer_id,
-    	COUNT(DISTINCT(s.order_date))
+    	COUNT(DISTINCT(s.order_date)) AS days_visited
     FROM sales s
     GROUP BY s.customer_id
     ```
     Output:
 
-    ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/ced6b871-1a31-4665-894d-185ef8e9dffd)
+    ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/5566e955-0821-4577-af71-fee5e47aca3e)
 
+   _Customer B visited the shop the most!_
 
    
 5. What was the first item from the menu purchased by each customer?
