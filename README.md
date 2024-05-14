@@ -330,7 +330,7 @@ Each of the following case study questions can be answered using a single SQL st
     SELECT
     	cp.customer_id
     	,SUM(points) AS total_points
-    FROM cte_points AS cp
+    FROM cte_points AS cp`
     GROUP BY cp.customer_id
     ORDER BY cp.customer_id
     ```
@@ -339,4 +339,30 @@ Each of the following case study questions can be answered using a single SQL st
     ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/9521c291-a788-4d2f-8c0d-e3c5e710728e)
 
     _Customer A had higher points than customer B. It seems that the former bought more products (possibly more sushi) during his or her first week of being a member._
+
+    ## Bonus Questions
+    ### Join All The Things
+
+    SQL Statement:
+    ```
+	SELECT
+		s.customer_id
+		,s.order_date
+		,men.product_name
+		,men.price
+		,CASE
+			WHEN s.order_date >= mem.join_date THEN 'Y'
+			ELSE 'N'
+		END AS member
+	FROM sales s
+	LEFT JOIN members mem ON s.customer_id = mem.customer_id
+	INNER JOIN menu men ON s.product_id = men.product_id
+	ORDER BY s.customer_id, s.order_date
+    ```
+    Output:
+
+    ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/95abbbba-2dc1-413f-a914-b014dbd723fd)
+
+
+
     
