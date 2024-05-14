@@ -2,7 +2,7 @@
 
 SQL DBMS used: PostgreSQL
 
-https://8weeksqlchallenge.com/case-study-1/
+For more information (e.g., Background, ER Diagram, etc.): https://8weeksqlchallenge.com/case-study-1/
 
 ## Case Study Questions
 
