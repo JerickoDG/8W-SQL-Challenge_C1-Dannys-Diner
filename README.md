@@ -363,6 +363,41 @@ Each of the following case study questions can be answered using a single SQL st
 
     ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/95abbbba-2dc1-413f-a914-b014dbd723fd)
 
+    ### Rank All The Things
 
+    SQL Statement:
+    ```
+	--CTE for determining if each purchase was made by a member or not
+	WITH cte_member AS(
+		SELECT
+			s.customer_id
+			,s.order_date
+			,men.product_name
+			,men.price
+			,CASE
+				WHEN s.order_date >= mem.join_date THEN 'Y'
+				ELSE 'N'
+			END AS member
+		FROM sales s
+		LEFT JOIN members mem ON s.customer_id = mem.customer_id
+		INNER JOIN menu men ON s.product_id = men.product_id
+		ORDER BY s.customer_id, s.order_date
+	)
+	
+	--Access te CTE and rank them based on order_date by customer_id and membership(i.e., Y/N)
+	SELECT
+		cm.customer_id
+		,cm.order_date
+		,cm.product_name
+		,cm.price
+		,cm.member
+		,CASE
+			WHEN cm.member = 'N' THEN NULL
+			ELSE DENSE_RANK() OVER(PARTITION BY cm.customer_id, cm.member ORDER BY cm.order_date)
+		END AS ranking
+	FROM cte_member cm
+	ORDER BY cm.customer_id, cm.order_date
+    ```
+    Output:
 
-    
+    ![image](https://github.com/JerickoDG/8W-SQL-Challenge_C1-Dannys-Diner/assets/60811658/296d2f37-7631-4e66-bb84-799923914105)
